@@ -9,8 +9,9 @@
 ### 1. Клонування проєкту
 Скопіюйте проєкт на свій комп’ютер:
 
-`git clone <посилання на репозиторій>
-cd <назва_проєкту>`
+`git clone https://github.com/Ngayka/parsing_and_merged_xml_files
+
+cd parsing_and_merged_xml_files`
 
 ## Збереження та доступ до об’єднаного XML на Google Drive
 
