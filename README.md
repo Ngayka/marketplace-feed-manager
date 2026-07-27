@@ -1,63 +1,168 @@
-# Інструкція з запуску проєкту
+# Marketplace Feed Manager
 
-## Необхідні програми
+A FastAPI-based service for aggregating, processing, and publishing
+product feeds for online marketplaces.
 
-1. VSCode або будь-який інший текстовий редактор.
-2. Docker та Docker Compose.
-3. Google Drive Desktop (щоб синхронізувати локальну папку з хмарою).
+The application automatically downloads product data from multiple
+supplier XML feeds, merges it into a single marketplace-compatible feed,
+and provides a permanent URL for accessing the generated file.
 
-### 1. Клонування проєкту
-Скопіюйте проєкт на свій комп’ютер:
+It also supports manual product feed generation from an uploaded XLSX
+file.
 
-`git clone https://github.com/Ngayka/parsing_and_merged_xml_files
+## Features
 
-cd parsing_and_merged_xml_files`
+-   Automatic download of multiple supplier XML feeds
+-   XML feed aggregation into a single product catalog
+-   Product data normalization and transformation
+-   Generation of marketplace-compatible XML feeds
+-   Permanent public URLs for generated feeds
+-   Manual XLSX file upload
+-   XLSX-to-XML conversion
+-   Simple web interface for feed management
+-   Error handling for unavailable or invalid supplier feeds
+-   Asynchronous request processing with FastAPI
+-   Easy integration with Prom.ua and other marketplaces
 
-## Збереження та доступ до об’єднаного XML на Google Drive
+## How It Works
 
-### 2. Використання Google Drive як сховища
+### Automatic feed generation
 
-* Встановіть Google Drive на ваш комп’ютер і авторизуйте його.
-* Створіть папку для XML-файлів у Google Drive, наприклад:
-* GoogleDrive/XML_merge
-* Переконайтеся, що папка синхронізується з комп’ютером через Google Drive Desktop.
-* Визначте повний шлях до цієї папки на вашому комп’ютері, наприклад:
-* /Users/username/GoogleDrive/XML_merge
-
-### 2. Налаштування Docker для роботи з Google Drive
-
-У файлі docker-compose.yaml знайдіть усі рядки з коментарем #вот тут потрібно додати свій шлях до диску 
-і замініть на свій шлях, наприклад:
-
-[- /Users/username/GoogleDrive/XML_merge:/data]()
-
-### 4. Налаштування .env
-
-Створіть файл .env у корені проєкту і додайте потрібні змінні середовища.
-Приклад:
-
-#### Шлях до збереження об’єднаного файлу
-OUTPUT_PATH=/data/merged_viatec.xml
-
-### 5. Запуск контейнерів
-У терміналі, перебуваючи в корені проєкту, запустіть:
-```commandline
-docker-compose up -d --build
+``` text
+Supplier XML feeds
+        ↓
+Download and parse XML files
+        ↓
+Normalize product data
+        ↓
+Merge products into one catalog
+        ↓
+Generate the final XML feed
+        ↓
+Publish the feed using a permanent URL
 ```
-Контейнери:
-* 
-* Redis – черга для Celery.
-* Celery Worker – виконує завдання з об’єднання XML.
-* Celery Beat – планувальник завдань.
-* Nginx – веб-сервер для доступу до файлів.
 
-### 6. Перевірка роботи
+### Manual feed generation
 
-XML-файли будуть завантажені та об’єднані в один файл у Google Drive.
-
-Перевірте папку: GoogleDrive/XML_merge/merged_viatec.xml.
-
-### 7. Зупинка контейнерів
-```commandline
-docker-compose down
+``` text
+XLSX file
+    ↓
+Upload through the web interface
+    ↓
+Validate and process product data
+    ↓
+Generate XML feed
+    ↓
+Publish the result using a permanent URL
 ```
+
+## Tech Stack
+
+-   Python
+-   FastAPI
+-   Uvicorn
+-   Jinja2
+-   XML
+-   XLSX
+-   HTML/CSS
+-   Pydantic
+
+## Project Structure
+
+``` text
+marketplace-feed-manager/
+│
+├── app/
+│   ├── api/
+│   ├── core/
+│   ├── services/
+│   ├── templates/
+│   ├── static/
+│   └── main.py
+│
+├── feeds/
+├── uploads/
+├── tests/
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+## Installation
+
+### Clone the repository
+
+``` bash
+git clone https://github.com/Ngayka/marketplace-feed-manager.git
+cd marketplace-feed-manager
+```
+
+### Create a virtual environment
+
+Windows:
+
+``` bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+Linux/macOS:
+
+``` bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Install dependencies
+
+``` bash
+pip install -r requirements.txt
+```
+
+## Running
+
+``` bash
+uvicorn app.main:app --reload
+```
+
+Application:
+
+``` text
+http://127.0.0.1:8000
+```
+
+Swagger:
+
+``` text
+http://127.0.0.1:8000/docs
+```
+
+## API Endpoints
+
+  Method   Endpoint                    Description
+  -------- --------------------------- -------------------------
+  GET      /                           Open web interface
+  POST     /feeds/generate             Generate automatic feed
+  POST     /feeds/upload               Upload XLSX
+  GET      /feeds/automatic_feed.xml   Download automatic feed
+  GET      /feeds/manual_feed.xml      Download manual feed
+  GET      /docs                       Swagger documentation
+
+## Future Improvements
+
+-   Celery + Redis
+-   Scheduled updates
+-   Database support
+-   User authentication
+-   Docker & Docker Compose
+-   Nginx deployment
+-   Feed history
+-   Telegram notifications
+
+## Author
+
+**Nataliia**
+
+Python Backend Developer
+
+GitHub: https://github.com/Ngayka

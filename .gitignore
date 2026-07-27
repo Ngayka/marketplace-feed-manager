@@ -1,7 +1,34 @@
-viatec.db
-merged_viatec.xml
-.idea
-develop_files
+# Virtual environment
+.venv/
+venv/
+
+# Environment variables
 .env
-.venv
-data
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SQLite
+*.db
+
+# Generated feeds
+feeds/
+
+# Local data
+data/
+
+# Temporary files
+*.tmp

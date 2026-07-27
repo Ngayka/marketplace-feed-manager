@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-07-27 09:11">
+  <shop>
+    <name>VIATEC</name>
+    <offers>
+      <offer id="broken-001" available="true">
+        <name>Незакритий товар</name>
+        <price>1000</price>
+      </offer>
+    </offers>
+  <!-- intentionally missing closing shop and yml_catalog tags -->

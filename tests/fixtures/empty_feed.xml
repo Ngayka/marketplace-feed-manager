@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-07-27 09:11">
+  <shop>
+    <name>VIATEC</name>
+    <company>VIATEC</company>
+    <url>https://viatec.ua</url>
+    <currencies>
+      <currency id="UAH" rate="1"/>
+      <currency id="USD" rate="44.95"/>
+    </currencies>
+    <categories/>
+    <offers/>
+  </shop>
+</yml_catalog>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-07-27 09:11">
+  <shop>
+    <name>VIATEC</name>
+    <company>VIATEC</company>
+    <url>https://viatec.ua</url>
+    <currencies>
+      <currency id="UAH" rate="1"/>
+      <currency id="USD" rate="44.95"/>
+    </currencies>
+    <categories>
+      <category id="10186">Відеонагляд</category>
+      <category id="10011" parentId="10186">Камери</category>
+      <category id="10013" parentId="10186">PTZ-камери</category>
+      <category id="10012" parentId="10186">Реєстратори</category>
+      <category id="10017" parentId="10186">Накопичувачі</category>
+      <category id="10059" parentId="10186">Тепловізійні камери</category>
+      <category id="10060" parentId="10186">Тепловізійні PTZ-камери</category>
+      <category id="10256" parentId="10186">Вибухозахищені камери</category>
+      <category id="10271" parentId="10186">Сервери VIATEC Dss Pro</category>
+      <category id="10063" parentId="10186">Контроль трафіку</category>
+      <category id="10018" parentId="10186">Зовнішні мікрофони</category>
+      <category id="10260" parentId="10186">Машинний зір</category>
+      <category id="10065" parentId="10186">Портативні камери</category>
+      <category id="10019" parentId="10186">Пульти управління</category>
+      <category id="10016" parentId="10186">Об'єктиви</category>
+      <category id="10155" parentId="10186">Комплекти відеонагляду</category>
+      <category id="10067" parentId="10186">Плати відеозахоплення</category>
+      <category id="10053" parentId="10186">Монітори</category>
+      <category id="10261" parentId="10186">Комп'ютери</category>
+    </categories>
+    <offers>
+      <offer id="100001" available="false">
+        <url>https://viatec.ua/product/VD-920B</url>
+        <name>VD-920B Відеокамера купольна чорно-біла</name>
+        <model>VD-920B Відеокамера купольна чорно-біла</model>
+        <categoryId>10011</categoryId>
+        <picture>https://viatec.ua/upload/images/prod/VD-920B.jpg</picture>
+        <barcode>VD-920B</barcode>
+        <description><![CDATA[<p>Ч / Б, купольна, матриця 1/3 "Sony, 420 ТВЛ, 0.05 Лк, f = 4-9 мм, AGC, IP66, DC 12В / 150мА</p>]]></description>
+      </offer>
+      <offer id="100002" available="true">
+        <url>https://viatec.ua/product/KPC-131ZEP</url>
+        <name>KPC-131ZEP відеокамера кольорова</name>
+        <model>KPC-131ZEP відеокамера кольорова</model>
+        <categoryId>10011</categoryId>
+        <price>686</price>
+        <currencyId>UAH</currencyId>
+        <picture>https://viatec.ua/upload/images/prod/KPC-131ZEP.jpg</picture>
+        <barcode>99-00000639</barcode>
+        <description><![CDATA[Кольорова, матриця 1/3 "Sharp, 480 ТВЛ, 0.3 Лк, C / CS Mount, мікрофон, 108x62x50 мм, DC 12В / 80мА]]></description>
+      </offer>
+      <offer id="100005" available="false">
+        <url>https://viatec.ua/product/VM32C-B36</url>
+        <name>VM32C-B36 Відеокамера бескорпусная кольорова</name>
+        <model>VM32C-B36 Відеокамера бескорпусная кольорова</model>
+        <categoryId>10011</categoryId>
+        <price>686</price>
+        <currencyId>UAH</currencyId>
+        <picture>https://viatec.ua/upload/images/prod/vm32c-b36.jpg</picture>
+        <vendor>Vision Hi-Tech</vendor>
+        <barcode>00000000252</barcode>
+        <param name="Виробник">Vision Hi-Tech</param>
+        <param name="Форм-фактор">Безкорпусна</param>
+        <param name="Роздільна здатність">1 МП</param>
+        <param name="Фокусна відстань">3.6мм</param>
+        <param name="Чутливість, лк">0.1 - 0.9</param>
+        <param name="Тип об'єктива">Фіксований</param>
+        <param name="Тип підсвічування">Немає</param>
+        <param name="Клас захисту">внутрішні</param>
+        <description><![CDATA[<p>Кольорова, безкорпусні, матриця 1/3 "SHARP, 420 ТВЛ, 0.3 Лк, f = 3.6мм, -10 C ~ +50 C, DC 12 В / 100 мА.</p>]]></description>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-07-27 09:10">
+  <shop>
+    <name>VIATEC</name>
+    <company>VIATEC</company>
+    <url>https://viatec.ua</url>
+    <currencies>
+      <currency id="UAH" rate="1"/>
+      <currency id="USD" rate="44.95"/>
+    </currencies>
+    <categories>
+      <category id="10002">Домофони, контроль доступу</category>
+      <category id="10020" parentId="10002">Монітори</category>
+      <category id="10021" parentId="10002">Викличні панелі</category>
+      <category id="10023" parentId="10002">Комплекти обладнання</category>
+      <category id="10026" parentId="10002">Зчитувачі</category>
+      <category id="10027" parentId="10002">Термінали</category>
+      <category id="10025" parentId="10002">Контролери</category>
+      <category id="10029" parentId="10002">Кнопки</category>
+      <category id="10028" parentId="10002">Замки</category>
+      <category id="10032" parentId="10002">Карти, брелоки</category>
+      <category id="10031" parentId="10002">Дверні доводчики</category>
+      <category id="10022" parentId="10002">Переговорні пристрої</category>
+      <category id="10030" parentId="10002">Турнікети</category>
+      <category id="10024" parentId="10002">Аксесуари для домофонів</category>
+      <category id="10071" parentId="10002">Аксесуари СККД</category>
+      <category id="10268" parentId="10002">Металодетектори</category>
+      <category id="10064" parentId="10002">Системи паркування</category>
+    </categories>
+    <offers>
+      <offer id="100056" available="false">
+        <url>https://viatec.ua/product/v-201</url>
+        <name>V-201 7 "монітор</name>
+        <model>V-201 7 "монітор</model>
+        <categoryId>10020</categoryId>
+        <price>3907</price>
+        <currencyId>UAH</currencyId>
+        <picture>https://viatec.ua/upload/images/prod/V-201.jpg</picture>
+        <vendor>Viatec</vendor>
+        <barcode>99-00000799</barcode>
+        <param name="Виробник">Viatec</param>
+        <param name="Тип підключення">Аналоговий</param>
+        <param name="Тип">монітор</param>
+        <description><![CDATA[7 "кольоровий монітор, 4-дротове з'єднання. Режим "вільні руки". Підключення 2-відеопанелей, до 5-ти домофонів паралельно. Колір: срібло, білий.]]></description>
+      </offer>
+      <offer id="100472" available="false">
+        <url>https://viatec.ua/product/DH-ITC314-PH1B-F2</url>
+        <name>DH-ITC314-PH1B-F2 3Мп паркувальний детектор</name>
+        <model>DH-ITC314-PH1B-F2 3Мп паркувальний детектор</model>
+        <categoryId>10064</categoryId>
+        <price>10395</price>
+        <currencyId>UAH</currencyId>
+        <picture>https://viatec.ua/upload/images/prod/ITC314-PH1B-F2.JPG</picture>
+        <vendor>Dahua</vendor>
+        <barcode>99-00000621</barcode>
+        <param name="Тип">IP</param>
+        <param name="Виробник">Dahua</param>
+        <param name="Тип пристрою">Паркувальний детектор</param>
+        <description><![CDATA[3Мп паркувальний детектор. Матриця: 1/3 &quot;CMOS; Стиснення: H.264; Запис: 3Мп - 20 кадрів / с; інтерфейси: 2-RJ45, 1-RS485, Тривога: 1вх / 1вих, CVBS вихід; Живлення: DC 8-26В / 6Вт; Розмір: ф105х118 мм; Вага: 550гр. Функції: розпізнавання автомобільних номерів, індикація (7 кольорів), статистика 3х паркувальних місць!]]></description>
+      </offer>
+      <offer id="100473" available="false">
+        <url>https://viatec.ua/product/DH-ITC314-PH1A-TF2</url>
+        <name>DH-ITC314-PH1A-TF2 3Мп паркувальний детектор</name>
+        <model>DH-ITC314-PH1A-TF2 3Мп паркувальний детектор</model>
+        <categoryId>10064</categoryId>
+        <price>20790</price>
+        <currencyId>UAH</currencyId>
+        <picture>https://viatec.ua/upload/images/prod/ITC314-PH1A-TF2.JPG</picture>
+        <vendor>Dahua</vendor>
+        <barcode>99-00000620</barcode>
+        <param name="Тип">IP</param>
+        <param name="Виробник">Dahua</param>
+        <param name="Тип пристрою">Паркувальний детектор</param>
+        <description><![CDATA[3Мп паркувальний детектор. Матриця: 2 сенсора - 1/3 &quot;CMOS; Стиснення: H.264; Запис: 3Мп - 20 кадрів / с; інтерфейси: 2-RJ45, 1-RS485, Тривога: 1вх / 1вих, CVBS вихід; Живлення: DC 8-26В / 6Вт; Розмір: ф140х1111 мм; Вага: 700гр. Функції: розпізнавання автомобільних номерів, індикація (7 кольорів), статистика 6х паркувальних місць!]]></description>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

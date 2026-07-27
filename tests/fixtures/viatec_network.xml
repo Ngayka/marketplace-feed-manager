@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-07-27 09:11">
+  <shop>
+    <name>VIATEC</name>
+    <company>VIATEC</company>
+    <url>https://viatec.ua</url>
+    <currencies>
+      <currency id="UAH" rate="1"/>
+      <currency id="USD" rate="44.95"/>
+    </currencies>
+    <categories>
+      <category id="10008">Мережеве обладнання</category>
+      <category id="10049" parentId="10008">Комутатори</category>
+      <category id="10058" parentId="10008">Маршрутизатор</category>
+      <category id="10051" parentId="10008">Інжектори, медіаконвертори</category>
+      <category id="10159" parentId="10008">Wi-Fi мости</category>
+      <category id="10050" parentId="10008">Точки доступу</category>
+      <category id="10270" parentId="10008">Модеми</category>
+      <category id="10052" parentId="10008">Сховище даних</category>
+      <category id="10070" parentId="10008">Конвертери, SFP модулі</category>
+      <category id="10077" parentId="10008">Серверні шафи</category>
+      <category id="10140" parentId="10008">Серверні аксесуари</category>
+      <category id="10227" parentId="10008">Патч-корди RJ45</category>
+      <category id="10066" parentId="10008">Серверні платформи</category>
+    </categories>
+    <offers>
+      <offer id="101083" available="false">
+        <url>https://viatec.ua/product/DHI-DSS4004</url>
+        <name>DHI-DSS4004 Головний центр спостереження</name>
+        <model>DHI-DSS4004 Головний центр спостереження</model>
+        <categoryId>10066</categoryId>
+        <picture>https://viatec.ua/upload/images/prod/DHI-DSS4004.jpg</picture>
+        <vendor>Dahua</vendor>
+        <barcode>00000001527</barcode>
+        <param name="Виробник">Dahua</param>
+        <description><![CDATA[Головний центр відеоспостереження. Вхідний потік на запис: до 350 Мб / с; Підключення до 256 каналів, і підтримка 100 каналів onvif; Підтримка 8000 користувачів та 500 прав; Сховище: 3x HDD (2.5 ") SATA3; Мережа: 4 порту RJ45 10/100 / 1000Мб / с; 2 порти USB2.0, 2 порти USB3.0; Розміри: 440x398x43 мм; Живлення: AC220В;]]></description>
+      </offer>
+      <offer id="101086" available="false">
+        <url>https://viatec.ua/product/VTSS5000</url>
+        <name>VTSS5000 SIP сервер</name>
+        <model>VTSS5000 SIP сервер</model>
+        <categoryId>10066</categoryId>
+        <picture>https://viatec.ua/upload/images/prod/DHI-DSS4004.jpg</picture>
+        <vendor>Dahua</vendor>
+        <barcode>99-00000827</barcode>
+        <param name="Виробник">Dahua</param>
+        <description><![CDATA[SIP сервер. Вхідний / вихідний потік: до 300 Мб / с; Підключення до 256 каналів IP, 5000 каналів VDP і 50 Onvif пристроїв; Підтримка додавання необмеженої кількості користувачів, 50 користувачів online, 100 прав; Сховище: 3x HDD (2.5 ") SATA3; Мережа: 4 порту RJ45 10/100 / 1000Мб / с; 2 порти USB2.0, 2 порти USB3.0; Розміри: 440x398x43 мм; Живлення: AC220В;]]></description>
+      </offer>
+      <offer id="101088" available="false">
+        <url>https://viatec.ua/product/IS-VSE2326X-BBA</url>
+        <name>IS-VSE2326X-BBA серверна платформа</name>
+        <model>IS-VSE2326X-BBA серверна платформа</model>
+        <categoryId>10066</categoryId>
+        <picture>https://viatec.ua/upload/images/prod/IS-VSE2326X-BBA.jpg</picture>
+        <vendor>Hikvision</vendor>
+        <barcode>00000001389</barcode>
+        <param name="Виробник">Hikvision</param>
+        <description><![CDATA[IS-VSE2326X-BBA - Серверна платформа Hikvision. Сховище: 2x HDD (2.5 ") SATA; Мережа: 3 порти RJ45 10/100 / 1000Мб / с; 4 порти USB2.0, 1-VGA; RAID 0,1,5,6; Шасі 2U; Розміри: 87,8x432x732,6 мм; Живлення: 200-240В; ≤35 кг.]]></description>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

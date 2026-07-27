@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Feed Manager</title>
+
+    <style>
+        body {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            margin-top: 0;
+            color: #555;
+        }
+
+        .card {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            color: #155724;
+            background: #d4edda;
+        }
+
+        .error {
+            padding: 12px;
+            border-radius: 6px;
+            color: #721c24;
+            background: #f8d7da;
+        }
+
+        .feed-link {
+            display: inline-block;
+            margin-top: 8px;
+            word-break: break-all;
+        }
+
+        input {
+            margin: 12px 0;
+        }
+
+        button {
+            padding: 10px 18px;
+            cursor: pointer;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .available {
+            color: #198754;
+        }
+
+        .missing {
+            color: #b02a37;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Feed Manager</h1>
+
+    <p class="subtitle">
+        Керування XML та XLSX-фідами для Prom.ua
+    </p>
+
+    {% if message %}
+        <p class="message">
+            {{ message }}
+        </p>
+    {% endif %}
+
+    {% if error %}
+        <p class="error">
+            {{ error }}
+        </p>
+    {% endif %}
+    {% if automatic_feed_exists %}
+    <p>Файл сформовано</p>
+
+        <p>
+            Розмір: {{ automatic_feed_size }} байтів
+        </p>
+
+        <p>
+            Постійне посилання:
+        </p>
+
+        <a
+            href="{{ automatic_feed_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            {{ automatic_feed_url }}
+        </a>
+    {% else %}
+        <p>Файл ще не сформовано</p>
+    {% endif %}
+</div>
+
+    <section class="card">
+
+        <h2>Ручний XLSX</h2>
+
+        <form
+            action="/admin/manual-feed"
+            method="post"
+            enctype="multipart/form-data"
+        >
+
+            <label for="file">
+                Оберіть XLSX-файл:
+            </label>
+
+            <br>
+
+            <input
+                id="file"
+                name="file"
+                type="file"
+                accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                required
+            >
+
+            <br>
+
+            <button type="submit">
+                Завантажити та замінити XLSX
+            </button>
+
+        </form>
+
+        {% if manual_feed_exists %}
+
+            <p class="status available">
+                Ручний файл завантажено
+            </p>
+
+            <p>
+                Розмір: {{ manual_feed_size }} байтів
+            </p>
+
+            <a
+                class="feed-link"
+                href="{{ manual_feed_url }}"
+                target="_blank"
+            >
+                {{ manual_feed_url }}
+            </a>
+
+            <p>
+                Наступне завантаження замінить файл,
+                але посилання не зміниться.
+            </p>
+
+        {% else %}
+
+            <p class="status missing">
+                Ручний XLSX-файл ще не завантажено
+            </p>
+
+        {% endif %}
+
+    </section>
+
+</body>
+</html>
