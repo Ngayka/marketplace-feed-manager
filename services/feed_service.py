@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import BinaryIO
 import shutil
@@ -17,9 +18,9 @@ FEEDS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 AUTOMATIC_FEED_URLS = [
-    "https://viatec.ua/files/product_info_videonagliad_yml.xml",
-    "https://viatec.ua/files/product_info_network_yml.xml",
-    "https://viatec.ua/files/product_info_video-intercoms_yml.xml",
+    os.environ[VIATEC_FEED_1],
+    os.environ[VIATEC_FEED_2],
+    os.environ[VIATEC_FEED_3],
 ]
 
 
@@ -82,7 +83,7 @@ def save_manual_feed(uploaded_file: BinaryIO) -> Path:
     Старий файл замінюється лише після успішної перевірки.
     """
 
-    temporary_path = FEEDS_DIR / "manual_feed.tmp.xlsx"
+    temporary_path = FEEDS_DIR / "safetyhouse_feed.tmp.xlsx"
 
     try:
         with temporary_path.open("wb") as destination:
@@ -196,7 +197,7 @@ def merge_automatic_feeds() -> Path:
         for offer in list(offers):
             first_offers.append(offer)
 
-    temporary_path = FEEDS_DIR / "automatic_feed.tmp.xml"
+    temporary_path = FEEDS_DIR / "viatec_feed.tmp.xml"
 
     try:
         tree = ET.ElementTree(first_root)

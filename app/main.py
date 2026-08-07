@@ -22,7 +22,7 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 
 app = FastAPI(
     title="Feed Manager",
-    description="Керування XML та XLSX-фідами для Prom.ua",
+    description="Керування XML та XLSX-посиланнями для Prom.ua",
 )
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
