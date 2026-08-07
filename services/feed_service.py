@@ -18,9 +18,9 @@ FEEDS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 AUTOMATIC_FEED_URLS = [
-    os.environ[VIATEC_FEED_1],
-    os.environ[VIATEC_FEED_2],
-    os.environ[VIATEC_FEED_3],
+    os.environ["VIATEC_FEED_1"],
+    os.environ["VIATEC_FEED_2"],
+    os.environ["VIATEC_FEED_3"],
 ]
 
 
