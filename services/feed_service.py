@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from typing import BinaryIO
+from dotenv import load_dotenv
 import shutil
 import zipfile
 import urllib.error
@@ -9,6 +10,7 @@ import xml.etree.ElementTree as ET
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
 FEEDS_DIR = BASE_DIR / "feeds"
 
 AUTOMATIC_XML_PATH = FEEDS_DIR / "automatic_feed.xml"
