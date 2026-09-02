@@ -26,6 +26,12 @@ def get_offers(xml_path: Path) -> list[ET.Element]:
     return root.findall("./shop/offers/offer")
 
 
+def make_feed(*offers: str) -> ET.Element:
+    return ET.fromstring(
+        f"<yml_catalog><shop><offers>{''.join(offers)}</offers></shop></yml_catalog>"
+    )
+
+
 def test_merge_automatic_feeds_combines_all_offers(
     monkeypatch,
     tmp_path,
@@ -40,6 +46,7 @@ def test_merge_automatic_feeds_combines_all_offers(
         load_xml("viatec_video.xml"),
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -80,6 +87,7 @@ def test_merge_contains_offers_from_every_feed(
         load_xml("viatec_video.xml"),
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -117,6 +125,117 @@ def test_merge_contains_offers_from_every_feed(
     assert "100056" in offer_ids
 
 
+def test_merge_removes_duplicate_barcodes_across_feeds(
+    monkeypatch,
+    tmp_path,
+):
+    roots = [
+        make_feed(
+            '<offer id="first-duplicate"><barcode>duplicate</barcode></offer>',
+            '<offer id="first-unique"><barcode>unique-1</barcode></offer>',
+        ),
+        make_feed(
+            '<offer id="second-duplicate"><barcode>duplicate</barcode></offer>',
+            '<offer id="second-unique"><barcode>unique-2</barcode></offer>',
+        ),
+        make_feed(
+            '<offer id="third-duplicate"><barcode>duplicate</barcode></offer>',
+            '<offer id="third-unique"><barcode>unique-3</barcode></offer>',
+        ),
+        make_feed(),
+    ]
+
+    def fake_download_xml(url: str) -> ET.Element:
+        return roots.pop(0)
+
+    output_path = tmp_path / "automatic_feed.xml"
+
+    monkeypatch.setattr(feed_service, "download_xml", fake_download_xml)
+    monkeypatch.setattr(feed_service, "AUTOMATIC_XML_PATH", output_path)
+    monkeypatch.setattr(feed_service, "FEEDS_DIR", tmp_path)
+
+    result = feed_service.merge_automatic_feeds()
+    offers = get_offers(result)
+
+    assert [offer.findtext("barcode") for offer in offers].count("duplicate") == 1
+    assert {offer.attrib["id"] for offer in offers} == {
+        "first-duplicate",
+        "first-unique",
+        "second-unique",
+        "third-unique",
+    }
+
+
+@pytest.mark.parametrize(
+    "status",
+    [
+        "Передзамовлення",
+        "У резерві",
+        "Очікується",
+        "Очікується : 02.09.2026",
+    ],
+)
+def test_merge_marks_unavailable_statuses_as_unavailable(
+    monkeypatch,
+    tmp_path,
+    status,
+):
+    roots = [
+        make_feed(
+            '<offer id="unavailable" available="true">'
+            '<barcode>unavailable-barcode</barcode>'
+            f'<param name="Наявність">{status}</param>'
+            "</offer>"
+        ),
+        make_feed(),
+        make_feed(),
+        make_feed(),
+    ]
+
+    def fake_download_xml(url: str) -> ET.Element:
+        return roots.pop(0)
+
+    output_path = tmp_path / "automatic_feed.xml"
+
+    monkeypatch.setattr(feed_service, "download_xml", fake_download_xml)
+    monkeypatch.setattr(feed_service, "AUTOMATIC_XML_PATH", output_path)
+    monkeypatch.setattr(feed_service, "FEEDS_DIR", tmp_path)
+
+    result = feed_service.merge_automatic_feeds()
+
+    assert get_offers(result)[0].attrib["available"] == "false"
+
+
+def test_merge_keeps_available_product_available(
+    monkeypatch,
+    tmp_path,
+):
+    roots = [
+        make_feed(
+            '<offer id="available" available="true">'
+            '<barcode>available-barcode</barcode>'
+            '<param name="Наявність">В наявності</param>'
+            "</offer>"
+        ),
+        make_feed(),
+        make_feed(),
+        make_feed(),
+    ]
+
+    def fake_download_xml(url: str) -> ET.Element:
+        return roots.pop(0)
+
+    output_path = tmp_path / "automatic_feed.xml"
+
+    monkeypatch.setattr(feed_service, "download_xml", fake_download_xml)
+    monkeypatch.setattr(feed_service, "AUTOMATIC_XML_PATH", output_path)
+    monkeypatch.setattr(feed_service, "FEEDS_DIR", tmp_path)
+
+    result = feed_service.merge_automatic_feeds()
+
+    assert get_offers(result)[0].attrib["available"] == "true"
+
+
 def test_merge_preserves_available_attribute(
     monkeypatch,
     tmp_path,
@@ -125,6 +244,7 @@ def test_merge_preserves_available_attribute(
         load_xml("viatec_video.xml"),
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -167,6 +287,7 @@ def test_merge_preserves_offer_without_price(
         load_xml("viatec_video.xml"),
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -214,6 +335,7 @@ def test_merge_handles_empty_additional_feeds(
         load_xml("viatec_video.xml"),
         load_xml("empty_feed.xml"),
         load_xml("empty_feed.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -252,6 +374,7 @@ def test_merge_creates_valid_xml(
         load_xml("viatec_video.xml"),
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -300,6 +423,7 @@ def test_merge_raises_error_when_first_feed_has_no_shop(
         invalid_root,
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:
@@ -346,6 +470,7 @@ def test_merge_raises_error_when_first_feed_has_no_offers(
         invalid_root,
         load_xml("viatec_network.xml"),
         load_xml("viatec_intercom.xml"),
+        load_xml("empty_feed.xml"),
     ]
 
     def fake_download_xml(url: str) -> ET.Element:

@@ -8,6 +8,7 @@ import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 
+from services.normalize_availability import normalize_availability
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
@@ -157,7 +158,7 @@ def download_xml(url: str) -> ET.Element:
 
 def merge_automatic_feeds() -> Path:
     """
-    Завантажує три XML-фіди Viatec, об'єднує товари
+    Завантажує чотири XML-фіди Viatec, об'єднує товари
     та зберігає результат у feeds/automatic_feed.xml.
     """
 
@@ -169,7 +170,7 @@ def merge_automatic_feeds() -> Path:
     first_root = roots[0]
 
     first_shop = first_root.find("shop")
-
+    seen_barcodes = set()
     if first_shop is None:
         raise FeedError(
             "У першому XML не знайдено елемент <shop>."
@@ -181,6 +182,15 @@ def merge_automatic_feeds() -> Path:
         raise FeedError(
             "У першому XML не знайдено елемент <offers>."
         )
+    for offer in first_offers:
+        barcode = offer.find("barcode")
+
+        if barcode is None or barcode.text is None:
+            raise FeedError("Для товару не знайдений артикул")
+
+        barcode_value = barcode.text.strip()
+        seen_barcodes.add(barcode_value)
+        normalize_availability(offer)
 
     for root in roots[1:]:
         shop = root.find("shop")
@@ -198,6 +208,14 @@ def merge_automatic_feeds() -> Path:
             )
 
         for offer in list(offers):
+            barcode = offer.find("barcode")
+            if barcode is None or barcode.text is None:
+                raise FeedError("Для товару не знайдений артикул")
+            barcode_value = barcode.text.strip()
+            if barcode_value in seen_barcodes:
+                continue
+            seen_barcodes.add(barcode_value)
+            normalize_availability(offer)
             first_offers.append(offer)
 
     temporary_path = FEEDS_DIR / "viatec_feed.tmp.xml"
@@ -221,3 +239,8 @@ def merge_automatic_feeds() -> Path:
         ) from error
 
     return AUTOMATIC_XML_PATH
+
+
+if __name__ == "__main__":
+    path = merge_automatic_feeds()
+    print(f"Файл сохранён: {path}")
