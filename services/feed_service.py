@@ -170,11 +170,17 @@ def merge_automatic_feeds() -> Path:
     first_root = roots[0]
 
     first_shop = first_root.find("shop")
+
     seen_barcodes = set()
     if first_shop is None:
         raise FeedError(
             "У першому XML не знайдено елемент <shop>."
         )
+    first_categories = first_shop.find("categories")
+    if first_categories is None:
+        raise FeedError("У першом XML не знайдено елемент <category>")
+    seen_categories_ids = {category.get("id")
+                           for category in first_categories.findall("category")}
 
     first_offers = first_shop.find("offers")
 
@@ -199,6 +205,14 @@ def merge_automatic_feeds() -> Path:
             raise FeedError(
                 "В одному із XML не знайдено елемент <shop>."
             )
+        categories = shop.find("categories")
+        if categories is not None:
+            for category in categories.findall("category"):
+                category_id = category.get("id")
+
+                if category_id not in seen_categories_ids:
+                    seen_categories_ids.add(category_id)
+                    first_categories.append(category)
 
         offers = shop.find("offers")
 
