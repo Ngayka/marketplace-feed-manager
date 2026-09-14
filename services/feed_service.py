@@ -1,83 +1,21 @@
-import os
+import shutil
+import xml.etree.ElementTree as ET
+from datetime import datetime
 from pathlib import Path
 from typing import BinaryIO
 from dotenv import load_dotenv
-import shutil
-import zipfile
-import urllib.error
-import urllib.request
-import xml.etree.ElementTree as ET
 
-from services.normalize_availability import normalize_availability
+from feed_config import (MANUAL_XLSX_PATH,
+                         FEEDS_DIR,
+                         AUTOMATIC_FEED_URLS,
+                         AUTOMATIC_XML_PATH,
+                         AVAILABLE_XML_PATH)
+from feed_utils import validate_xlsx, download_xml
+from services.exceptions import FeedError
+from services.get_availabale_code import update_prom_by_availability
+from services.merge_available_products import merge_available_products_feeds
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
-FEEDS_DIR = BASE_DIR / "feeds"
-
-AUTOMATIC_XML_PATH = FEEDS_DIR / "automatic_feed.xml"
-MANUAL_XLSX_PATH = FEEDS_DIR / "manual_feed.xlsx"
-
-FEEDS_DIR.mkdir(parents=True, exist_ok=True)
-
-
-AUTOMATIC_FEED_URLS = [
-    os.environ["VIATEC_FEED_1"],
-    os.environ["VIATEC_FEED_2"],
-    os.environ["VIATEC_FEED_3"],
-    os.environ["VIATEC_FEED_4"],
-]
-
-
-class FeedError(Exception):
-    """Помилка під час оброблення фіда."""
-
-
-def validate_xlsx(file_path: Path) -> None:
-    """
-    Перевіряє, що файл є коректним XLSX-документом.
-
-    XLSX технічно є ZIP-архівом із внутрішніми XML-файлами.
-    """
-
-    if not file_path.exists():
-        raise FeedError("Завантажений файл не знайдено.")
-
-    if file_path.stat().st_size == 0:
-        raise FeedError("Завантажений файл порожній.")
-
-    if not zipfile.is_zipfile(file_path):
-        raise FeedError(
-            "Файл не є коректним XLSX-документом."
-        )
-
-    try:
-        with zipfile.ZipFile(file_path, "r") as archive:
-            filenames = set(archive.namelist())
-
-            required_files = {
-                "[Content_Types].xml",
-                "xl/workbook.xml",
-            }
-
-            missing_files = required_files - filenames
-
-            if missing_files:
-                raise FeedError(
-                    "Файл не має коректної структури XLSX."
-                )
-
-            damaged_file = archive.testzip()
-
-            if damaged_file is not None:
-                raise FeedError(
-                    f"XLSX-файл пошкоджений: {damaged_file}"
-                )
-
-    except zipfile.BadZipFile as error:
-        raise FeedError(
-            "Не вдалося прочитати XLSX-файл."
-        ) from error
-
 
 def save_manual_feed(uploaded_file: BinaryIO) -> Path:
     """
@@ -111,52 +49,9 @@ def save_manual_feed(uploaded_file: BinaryIO) -> Path:
         ) from error
 
 
-def download_xml(url: str) -> ET.Element:
-    """
-    Завантажує XML за URL та повертає кореневий елемент.
-    """
-
-    try:
-        request = urllib.request.Request(
-            url,
-            headers={
-                "User-Agent": "Mozilla/5.0",
-            },
-        )
-
-        with urllib.request.urlopen(
-            request,
-            timeout=60,
-        ) as response:
-            content = response.read()
-
-    except urllib.error.HTTPError as error:
-        raise FeedError(
-            f"Сервер повернув помилку {error.code} для URL: {url}"
-        ) from error
-
-    except urllib.error.URLError as error:
-        raise FeedError(
-            f"Не вдалося завантажити XML за URL {url}: "
-            f"{error.reason}"
-        ) from error
-
-    except TimeoutError as error:
-        raise FeedError(
-            f"Перевищено час очікування для URL: {url}"
-        ) from error
-
-    try:
-        return ET.fromstring(content)
-
-    except ET.ParseError as error:
-        raise FeedError(
-            f"За URL отримано некоректний XML: {url}. "
-            f"Помилка: {error}"
-        ) from error
 
 
-def merge_automatic_feeds() -> Path:
+def merge_prom_feeds() -> Path:
     """
     Завантажує чотири XML-фіди Viatec, об'єднує товари
     та зберігає результат у feeds/automatic_feed.xml.
@@ -168,6 +63,10 @@ def merge_automatic_feeds() -> Path:
     ]
 
     first_root = roots[0]
+    first_root.set(
+        "date",
+        datetime.now().strftime("%Y-%m-%d %H:%M"),
+    )
 
     first_shop = first_root.find("shop")
 
@@ -196,7 +95,6 @@ def merge_automatic_feeds() -> Path:
 
         barcode_value = barcode.text.strip()
         seen_barcodes.add(barcode_value)
-        normalize_availability(offer)
 
     for root in roots[1:]:
         shop = root.find("shop")
@@ -229,7 +127,6 @@ def merge_automatic_feeds() -> Path:
             if barcode_value in seen_barcodes:
                 continue
             seen_barcodes.add(barcode_value)
-            normalize_availability(offer)
             first_offers.append(offer)
 
     temporary_path = FEEDS_DIR / "viatec_feed.tmp.xml"
@@ -252,9 +149,15 @@ def merge_automatic_feeds() -> Path:
             f"Не вдалося зберегти автоматичний XML-фід: {error}"
         ) from error
 
+    update_prom_by_availability(
+        AVAILABLE_XML_PATH,
+        AUTOMATIC_XML_PATH,
+    )
+
     return AUTOMATIC_XML_PATH
 
 
 if __name__ == "__main__":
-    path = merge_automatic_feeds()
+    merge_available_products_feeds()
+    path = merge_prom_feeds()
     print(f"Файл сохранён: {path}")

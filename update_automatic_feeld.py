@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from services.feed_service import FeedError, merge_automatic_feeds
+from services.feed_service import FeedError, merge_prom_feeds
 
 
 def main() -> None:
@@ -8,7 +8,7 @@ def main() -> None:
     print(f"Початок оновлення: {datetime.now()}")
 
     try:
-        feed_path = merge_automatic_feeds()
+        feed_path = merge_prom_feeds()
 
     except FeedError as error:
         print(f"Оновлення не виконано: {error}")
