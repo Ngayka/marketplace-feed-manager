@@ -129,6 +129,13 @@ def merge_prom_feeds() -> Path:
             seen_barcodes.add(barcode_value)
             first_offers.append(offer)
 
+    for offer in first_offers:
+        price = offer.find("price")
+        currency_id = offer.find("currencyId")
+
+        if price is None or currency_id is None:
+            offer.set("available", "false")
+
     temporary_path = FEEDS_DIR / "viatec_feed.tmp.xml"
 
     try:
