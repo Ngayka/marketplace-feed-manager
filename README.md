@@ -1,5 +1,10 @@
 # Marketplace Feed Manager
 
+**Last updated:** 26.11.2026
+
+Added brand filtering to the VIATEC feed and introduced a separate filtered
+Trinity XML feed, available at `GET /feeds/trinity.xml`.
+
 A FastAPI-based service for aggregating, processing, and publishing
 product feeds for online marketplaces.
 
@@ -14,6 +19,7 @@ file.
 
 -   Automatic download of multiple supplier XML feeds
 -   XML feed aggregation into a single product catalog
+-   Brand filtering with separate exclusion lists for VIATEC and Trinity
 -   Product data normalization and transformation
 -   Generation of marketplace-compatible XML feeds
 -   Permanent public URLs for generated feeds
@@ -26,7 +32,7 @@ file.
 
 ## How It Works
 
-### Automatic feed generation
+### Automatic VIATEC feed generation
 
 ``` text
 Supplier XML feeds
@@ -37,10 +43,33 @@ Normalize product data
         ↓
 Merge products into one catalog
         ↓
+Exclude products from listed brands
+        ↓
 Generate the final XML feed
         ↓
 Publish the feed using a permanent URL
 ```
+
+### Brand filtering and Trinity feed generation
+
+| Feed | Excluded brands |
+| --- | --- |
+| VIATEC | MikroTik, TP-Link |
+| Trinity | MikroTik, TP-Link, Hikvision, Dahua, Imou |
+
+Both filters look for brand names anywhere in the XML fields `vendor`,
+`name`, and `name_ua`, ignoring case. The filters recognize `TP-Link`,
+`TP Link`, and `TPLink` as variants of the same brand.
+
+VIATEC filtering runs after the supplier feeds are merged. The Trinity
+generator downloads its source XML from the URL configured in
+`TRINITY_PROM_FEED` and saves the filtered result to
+`feeds/trinity_feed.xml`. If filtering leaves no products, the update fails
+before replacing the existing file.
+
+Run `python update_automatic_feed.py` to refresh both feeds. The web
+interface shows each feed's availability and, when the file exists, its size,
+last update time, and permanent URL.
 
 ### Manual feed generation
 
@@ -139,14 +168,15 @@ http://127.0.0.1:8000/docs
 
 ## API Endpoints
 
-  Method   Endpoint                    Description
-  -------- --------------------------- -------------------------
-  GET      /                           Open web interface
-  POST     /feeds/generate             Generate automatic feed
-  POST     /feeds/upload               Upload XLSX
-  GET      /feeds/automatic_feed.xml   Download automatic feed
-  GET      /feeds/manual_feed.xml      Download manual feed
-  GET      /docs                       Swagger documentation
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/` | Open the web interface |
+| POST | `/admin/manual-feed` | Upload the manual XLSX feed |
+| GET | `/feeds/automatic.xml` | Download the VIATEC XML feed |
+| GET | `/feeds/trinity.xml` | Download the filtered Trinity XML feed. Returns `404` if the file has yet to be generated |
+| GET | `/feeds/manual.xlsx` | Download the manual XLSX feed |
+| GET | `/health` | Check service status and feed availability |
+| GET | `/docs` | Open Swagger documentation |
 
 ## Future Improvements
 

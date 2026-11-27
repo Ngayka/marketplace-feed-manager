@@ -29,3 +29,24 @@ AVAILABLE_FEED_URLS = [
     os.environ["VIATEC_AVAILABLE_FEED_3"],
     # os.environ["VIATEC_FEED_4"],
 ]
+
+TRINITY_XML_PATH = FEEDS_DIR / "trinity_feed.xml"
+
+TRINITY_PROM_FEED = os.getenv("TRINITY_PROM_FEED")
+
+EXCLUDED_BRANDS = (
+    "mikrotik",
+    "tp-link",
+    "tp link",
+    "tplink",
+)
+
+EXCLUDED_BRANDS_TRINITY = (
+    "mikrotik",
+    "tp-link",
+    "tp link",
+    "tplink",
+    "hikvision",
+    "dahua",
+    "imou",
+)

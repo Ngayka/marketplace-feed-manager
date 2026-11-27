@@ -9,7 +9,8 @@ from feed_config import (MANUAL_XLSX_PATH,
                          FEEDS_DIR,
                          AUTOMATIC_FEED_URLS,
                          AUTOMATIC_XML_PATH,
-                         AVAILABLE_XML_PATH)
+                         AVAILABLE_XML_PATH,
+                         EXCLUDED_BRANDS)
 from feed_utils import validate_xlsx, download_xml
 from services.exceptions import FeedError
 from services.get_availabale_code import update_prom_by_availability
@@ -49,12 +50,11 @@ def save_manual_feed(uploaded_file: BinaryIO) -> Path:
         ) from error
 
 
-
-
 def merge_prom_feeds() -> Path:
     """
-    Завантажує чотири XML-фіди Viatec, об'єднує товари
-    та зберігає результат у feeds/automatic_feed.xml.
+    Завантажує XML-фіди Viatec, об'єднує товари,
+    виключає товари за назвами брендів та зберігає
+    результат у feeds/automatic_feed.xml.
     """
 
     roots = [
@@ -128,6 +128,20 @@ def merge_prom_feeds() -> Path:
                 continue
             seen_barcodes.add(barcode_value)
             first_offers.append(offer)
+
+    for offer in first_offers.findall("offer"):
+        fields = (
+            (offer.findtext("vendor") or "").casefold(),
+            (offer.findtext("name") or "").casefold(),
+            (offer.findtext("name_ua") or "").casefold(),
+        )
+
+        if any(
+                brand in field
+                for brand in EXCLUDED_BRANDS
+                for field in fields
+        ):
+            first_offers.remove(offer)
 
     for offer in first_offers:
         price = offer.find("price")

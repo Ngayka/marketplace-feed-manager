@@ -99,28 +99,93 @@
             {{ error }}
         </p>
     {% endif %}
-    {% if automatic_feed_exists %}
-    <p>Файл сформовано</p>
 
-        <p>
-            Розмір: {{ automatic_feed_size }} байтів
-        </p>
 
-        <p>
-            Постійне посилання:
-        </p>
+    <!-- VIATEC -->
 
-        <a
-            href="{{ automatic_feed_url }}"
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            {{ automatic_feed_url }}
-        </a>
-    {% else %}
-        <p>Файл ще не сформовано</p>
-    {% endif %}
-</div>
+    <section class="card">
+
+        <h2>VIATEC — автоматичний XML</h2>
+
+        {% if automatic_feed_exists %}
+
+            <p class="status available">
+                Файл сформовано
+            </p>
+
+            <p>
+                Розмір: {{ automatic_feed_size }} байтів
+            </p>
+
+            <p>
+                Останнє оновлення: {{ automatic_feed_updated }}
+            </p>
+
+            <p>Постійне посилання:</p>
+
+            <a
+                class="feed-link"
+                href="{{ automatic_feed_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {{ automatic_feed_url }}
+            </a>
+
+        {% else %}
+
+            <p class="status missing">
+                Файл ще не сформовано
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- Trinity -->
+
+    <section class="card">
+
+        <h2>Trinity — автоматичний XML</h2>
+
+        {% if trinity_feed_exists %}
+
+            <p class="status available">
+                Файл сформовано
+            </p>
+
+            <p>
+                Розмір: {{ trinity_feed_size }} байтів
+            </p>
+
+            <p>
+                Останнє оновлення: {{ trinity_feed_updated }}
+            </p>
+
+            <p>Постійне посилання:</p>
+
+            <a
+                class="feed-link"
+                href="{{ trinity_feed_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                {{ trinity_feed_url }}
+            </a>
+
+        {% else %}
+
+            <p class="status missing">
+                Файл ще не сформовано
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- Ручний XLSX -->
 
     <section class="card">
 
@@ -164,10 +229,13 @@
                 Розмір: {{ manual_feed_size }} байтів
             </p>
 
+            <p>Постійне посилання:</p>
+
             <a
                 class="feed-link"
                 href="{{ manual_feed_url }}"
                 target="_blank"
+                rel="noopener noreferrer"
             >
                 {{ manual_feed_url }}
             </a>

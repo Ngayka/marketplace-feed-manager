@@ -1,15 +1,18 @@
 from pathlib import Path
-
+from datetime import datetime
 from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from starlette.responses import PlainTextResponse
 
 from services.feed_service import (
-    AUTOMATIC_XML_PATH,
-    MANUAL_XLSX_PATH,
     FeedError,
     save_manual_feed,
+)
+from feed_config import (
+    AUTOMATIC_XML_PATH,
+    MANUAL_XLSX_PATH,
+    TRINITY_XML_PATH,
 )
 
 import logging
@@ -53,16 +56,23 @@ def build_page_context(
         "message": message,
         "error": error,
 
+        # Постійні посилання
         "automatic_feed_url": str(
             request.url_for("automatic_xml_feed")
         ),
         "manual_feed_url": str(
             request.url_for("manual_xlsx_feed")
         ),
+        "trinity_feed_url": str(
+            request.url_for("trinity_xml_feed")
+        ),
 
+        # Наявність файлів
         "automatic_feed_exists": AUTOMATIC_XML_PATH.exists(),
         "manual_feed_exists": MANUAL_XLSX_PATH.exists(),
+        "trinity_feed_exists": TRINITY_XML_PATH.exists(),
 
+        # Розміри файлів
         "automatic_feed_size": (
             AUTOMATIC_XML_PATH.stat().st_size
             if AUTOMATIC_XML_PATH.exists()
@@ -71,6 +81,27 @@ def build_page_context(
         "manual_feed_size": (
             MANUAL_XLSX_PATH.stat().st_size
             if MANUAL_XLSX_PATH.exists()
+            else None
+        ),
+        "trinity_feed_size": (
+            TRINITY_XML_PATH.stat().st_size
+            if TRINITY_XML_PATH.exists()
+            else None
+        ),
+
+        # Дата останнього оновлення
+        "automatic_feed_updated": (
+            datetime.fromtimestamp(
+                AUTOMATIC_XML_PATH.stat().st_mtime
+            ).strftime("%d.%m.%Y %H:%M:%S")
+            if AUTOMATIC_XML_PATH.exists()
+            else None
+        ),
+        "trinity_feed_updated": (
+            datetime.fromtimestamp(
+                TRINITY_XML_PATH.stat().st_mtime
+            ).strftime("%d.%m.%Y %H:%M:%S")
+            if TRINITY_XML_PATH.exists()
             else None
         ),
     }
@@ -165,6 +196,25 @@ def automatic_feed():
     )
 
 
+@app.get("/feeds/trinity.xml",
+         name="trinity_xml_feed")
+def trinity_feed():
+    if not TRINITY_XML_PATH.exists():
+        return HTMLResponse(
+            content="XML-фід Trinity ще не сформовано.",
+            status_code=404,
+        )
+
+    return FileResponse(
+        path=TRINITY_XML_PATH,
+        media_type="application/xml",
+        filename="trinity_feed.xml",
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
+    )
+
+
 @app.get("/feeds/manual.xlsx",
          name="manual_xlsx_feed")
 def manual_xlsx_feed():
@@ -192,5 +242,6 @@ def health():
     return {
         "status": "ok",
         "automatic_feed_exists": AUTOMATIC_XML_PATH.exists(),
+        "trinity_feed_exists": TRINITY_XML_PATH.exists(),
         "manual_feed_exists": MANUAL_XLSX_PATH.exists(),
     }
